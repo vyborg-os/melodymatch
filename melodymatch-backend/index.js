@@ -5,12 +5,15 @@ const cors = require('cors');
 const app = express();
 const userRoutes = require('./routes/userRoutes');
 
+// Middleware
+app.use(cors({
+    origin: 'http://localhost:3000', // Allow requests from your frontend's port
+    credentials: true,
+  }));
+app.use(express.json());
+
 // Use routes
 app.use('/api', userRoutes);
-
-// Middleware
-app.use(cors());
-app.use(express.json());
 
 // Routes
 app.get('/', (req, res) => {
