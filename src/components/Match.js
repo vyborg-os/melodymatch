@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { getMatches } from '../services/api';
-import { TextField, Button, Container, Table } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { getMatches } from '../services/api'; // Make sure this API call handles the email as a parameter
+import { TextField, Button, Container } from '@mui/material';
 import Navbar from './Navbar';
+import axios from 'axios';
 
 const styles = {
   container: {
@@ -54,52 +55,88 @@ const styles = {
 const Match = () => {
   const [email, setEmail] = useState('');
   const [matches, setMatches] = useState([]);
+  const [error, setError] = useState(null);
+
+  // Automatically set the email from local storage or authentication token
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const token = localStorage.getItem('token'); // Assuming the token is stored in local storage
+        const config = {
+          headers: {
+            'Authorization': token,
+          },
+        };
+
+        // Fetch the user profile to get email
+        const response = await axios.get('http://localhost:5000/api/profile', config); 
+        setEmail(response.data.email); // Set the email from the user profile
+      } catch (err) {
+        console.error('Error fetching user email:', err);
+        setError('Failed to fetch user details. Please try again later.');
+      }
+    };
+
+    fetchUserEmail();
+  }, []); // Runs only once when the component is mounted
 
   const handleMatch = async (e) => {
     e.preventDefault();
-    const result = await getMatches(email);
-    setMatches(result);
+    setError(null); // Clear previous errors
+
+    try {
+      const result = await getMatches(email); // Fetch matches based on the email
+      setMatches(result);
+    } catch (err) {
+      console.error('Error fetching matches:', err);
+      setError('Failed to find matches. Please try again later.');
+    }
   };
+
   return (
     <>
-    {/* Navbar should be rendered here */}
-    <Navbar />
-    <Container maxWidth="sm">
-      <a href="/logout" style={{textDecoration: '0', float: 'right', paddingTop: '20px'}}>Logout</a>
-      <h1>Find a Music Match</h1>
-      <form onSubmit={handleMatch}>
-      <TextField
-          fullWidth
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          margin="normal"
-          required
-        />
-         <Button type="submit" variant="contained" color="primary" fullWidth>
-         Find Matches
-        </Button>
-      </form>
+      <Navbar />
+      <Container maxWidth="sm">
+        <h4>Find Users with Preferences Match</h4>
 
-      <div style={styles.container}>
-      <h3 style={styles.title}>Matches</h3>
-      <ul style={styles.list}>
-        {matches.map((match) => (
-          <li key={match._id} style={styles.listItem}>
-            <div style={styles.card}>
-              <div style={styles.cardHeader}>
-                <h4 style={styles.matchName}>{match.name}</h4>
-                <span style={styles.preferences}>
-                  Preferences: {match.preferences.join(', ')}
-                </span>
-              </div>
-              {/* You can also include more data about each match here */}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-    </Container>
+        {/* Display error if any */}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+
+        <form onSubmit={handleMatch}>
+          {/* Display the user's email, pre-filled */}
+          <TextField
+            fullWidth
+            label="Email"
+            value={email} // Pre-populated from user profile
+            disabled // Disable the field so users cannot change it manually
+            margin="normal"
+            required
+          />
+
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Find Matches
+          </Button>
+        </form>
+
+        {/* Matches Display */}
+        <div style={styles.container}>
+          <h3 style={styles.title}>Matches</h3>
+          <ul style={styles.list}>
+            {matches.map((match) => (
+              <li key={match._id} style={styles.listItem}>
+                <div style={styles.card}>
+                  <div style={styles.cardHeader}>
+                    <h4 style={styles.matchName}>{match.name}</h4>
+                    <span style={styles.preferences}>
+                      Preferences: {match.preferences.join(', ')}
+                    </span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Container>
     </>
   );
 };

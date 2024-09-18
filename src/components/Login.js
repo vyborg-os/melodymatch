@@ -22,7 +22,9 @@ const Login = () => {
         // alert(`Welcome ${user.name}`);
         toast.success(`Welcome ${user.name}`)
     //   useNavigate('/match');
-       navigate('/dashboard');
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 2000); 
     } catch (error) {
       // alert('Login failed');
       toast.error('Wrong Credentials')

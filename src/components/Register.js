@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../services/api';
 import logo from '../assets/logo2.png'; 
 import { TextField, Button, Container, Typography } from '@mui/material';
@@ -14,7 +15,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [preferences, setPreferences] = useState('');
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = { name, email, password, preferences: preferences.split(',') };
@@ -27,8 +28,11 @@ const Register = () => {
       // alert(result.error); // Display the error message in an alert
       toast.error(result.error);
     } else {
-      alert('User registered successfully'); // Optionally display a success message
-      <Navigate to="/login" replace />
+      toast.success('User registered successfully'); 
+      //<Navigate to="/login" replace />
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000); 
     }
   };
 
