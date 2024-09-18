@@ -4,6 +4,10 @@ import HomePage from './pages/HomePage';
 import MatchPage from './pages/MatchPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import LogOutPage from './pages/LogOutPage';
+import Navbar from './components/Navbar';
+import Dashboard from './components/Dashboard';
+import Profile from './components/Profile';
 
 // Function to check if the user is authenticated
 const isAuthenticated = () => !!localStorage.getItem('token');
@@ -21,7 +25,10 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
-
+        <Route path="/logout" element={<LogOutPage />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/navbar' element={<Navbar />} />
+        
         {/* Protected route */}
         <Route 
           path="/match" 
@@ -31,6 +38,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path='/profile' element={ <ProtectedRoute>
+          <Profile />
+          </ProtectedRoute>} />
       </Routes>
     </Router>
   );

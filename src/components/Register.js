@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import { registerUser } from '../services/api';
+import logo from '../assets/logo2.png'; 
 import { TextField, Button, Container, Typography } from '@mui/material';
+import { BrowserRouter as  Navigate } from 'react-router-dom';
+import {
+  toast,
+  ToastContainer
+} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -17,16 +24,18 @@ const Register = () => {
     const result = await registerUser(userData);
 
     if (result.error) {
-      alert(result.error); // Display the error message in an alert
+      // alert(result.error); // Display the error message in an alert
+      toast.error(result.error);
     } else {
       alert('User registered successfully'); // Optionally display a success message
+      <Navigate to="/login" replace />
     }
   };
 
   return (
     <Container maxWidth="sm">
-    <Typography variant="h4" gutterBottom>
-      Register
+    <Typography variant="h5" gutterBottom>
+    <center><img src={logo} alt="Logo" width="200" /></center> Register
     </Typography>
     <form onSubmit={handleSubmit}>
       <TextField
@@ -67,6 +76,8 @@ const Register = () => {
         Register
       </Button>
     </form>
+    <ToastContainer />
+    <a href="/login" style={{textDecoration: '0', float: 'right', paddingTop: '20px'}}>Already a User? Login</a>
   </Container>
   );
 };

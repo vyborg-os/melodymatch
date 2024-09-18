@@ -3,23 +3,25 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
-const authenticateToken = (req, res, next) => {
-  const token = req.header('Authorization');
-  if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
-
-  try {
-    const decoded = jwt.verify(token, '123456789');
-    req.user = decoded; // Assign user info to the request object
-    next();
-  } catch (err) {
-    res.status(401).json({ message: 'Invalid token' });
-  }
-};
+const authenticateToken = require('./Authenticate'); 
 
 router.get('/welcome', (req, res) => {
     res.json({ message: "Welcome to MelodyMatch!" });
   });
+
+router.get('/profile', authenticateToken, async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const user = await User.findById(userId).select('-password');; 
+      if (!user) {
+        return res.status(404).json({ msg: 'User not found' });
+      }
+      res.json(user);
+    } catch (err) {
+      res.status(500).send('Server Error');
+    }
+  });
+  
 
 // Get all users
 router.get('/users', async (req, res) => {
