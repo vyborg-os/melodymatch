@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { registerUser } from '../services/api';
 import logo from '../assets/logo2.png'; 
 import { TextField, Button, Container, Typography } from '@mui/material';
-import { BrowserRouter as  Navigate } from 'react-router-dom';
 import {
   toast,
   ToastContainer

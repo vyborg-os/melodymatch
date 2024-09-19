@@ -96,7 +96,25 @@ router.post('/login', async (req, res) => {
   
     res.json({ token, user: { name: user.name, email: user.email } });
   });
-  
+
+router.put('/preferences',authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { preferences } = req.body;  // Expecting comma-separated preferences
+    const updatedPreferences = preferences.split(',').map(pref => pref.trim());
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { preferences: updatedPreferences },
+      { new: true } // Return the updated user
+    );
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Server Error' });
+  }
+});
+
 
   
 module.exports = router;

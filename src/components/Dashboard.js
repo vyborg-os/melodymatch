@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import logo from '../assets/logo2.png'; 
 import playing from '../assets/musicplay.gif'; 
-import bg from '../assets/2.jpg'; 
 import load from '../assets/3.gif'; 
 import axios from "axios";
-import { TextField, Button, Container } from '@mui/material';
+import { Button } from '@mui/material';
 
 const Dashboard = () => {
   const [albums, setAlbums] = useState([]);
@@ -76,7 +74,7 @@ const Dashboard = () => {
             <p><strong>Year:</strong> {album.year}</p>
             <p><strong>Genre:</strong> {album.genre.map((g) => g.name).join(", ")}</p>
             <Button variant="contained" color="primary" fullWidth>
-                Like
+                Interested
             </Button>
           </div>
         ))}

@@ -3,6 +3,7 @@ import { getMatches } from '../services/api'; // Make sure this API call handles
 import { TextField, Button, Container } from '@mui/material';
 import Navbar from './Navbar';
 import axios from 'axios';
+import load from '../assets/3.gif'; 
 
 const styles = {
   container: {
@@ -56,6 +57,7 @@ const Match = () => {
   const [email, setEmail] = useState('');
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Automatically set the email from local storage or authentication token
   useEffect(() => {
@@ -71,9 +73,11 @@ const Match = () => {
         // Fetch the user profile to get email
         const response = await axios.get('http://localhost:5000/api/profile', config); 
         setEmail(response.data.email); // Set the email from the user profile
+        setLoading(false);
       } catch (err) {
         console.error('Error fetching user email:', err);
         setError('Failed to fetch user details. Please try again later.');
+        setLoading(false);
       }
     };
 
@@ -83,16 +87,17 @@ const Match = () => {
   const handleMatch = async (e) => {
     e.preventDefault();
     setError(null); // Clear previous errors
-
+    setLoading(false);
     try {
       const result = await getMatches(email); // Fetch matches based on the email
       setMatches(result);
     } catch (err) {
       console.error('Error fetching matches:', err);
       setError('Failed to find matches. Please try again later.');
+      setLoading(false);
     }
   };
-
+  if (loading) return <center style={{paddingTop: '70px'}}><img src={load} alt="Loading.." width="200" /></center>;
   return (
     <>
       <Navbar />

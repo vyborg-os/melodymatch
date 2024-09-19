@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import HomePage from './pages/HomePage';
 import MatchPage from './pages/MatchPage';
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
@@ -8,6 +7,7 @@ import LogOutPage from './pages/LogOutPage';
 import Navbar from './components/Navbar';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
+import './App.css';
 
 // Function to check if the user is authenticated
 const isAuthenticated = () => !!localStorage.getItem('token');
@@ -22,7 +22,7 @@ const App = () => {
     <Router>
       <Routes>
         {/* Public routes */}
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<LogOutPage />} />

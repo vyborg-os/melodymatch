@@ -1,8 +1,6 @@
 import React from 'react';
-import { Link, useHistory, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Button, Typography } from '@mui/material';
-import logo from '../assets/logo2.png'; 
-
 const Navbar = () => {
   const navigate = useNavigate();
 
